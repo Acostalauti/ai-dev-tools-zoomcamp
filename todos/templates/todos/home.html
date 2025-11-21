@@ -1,0 +1,43 @@
+{% extends "todos/base.html" %}
+
+{% block title %}Home - TODO App{% endblock %}
+
+{% block content %}
+<h1>TODO List</h1>
+
+<p>
+    <a href="{% url 'todo_create' %}" class="btn">➕ New TODO</a>
+</p>
+
+<ul>
+    {% for todo in todos %}
+        <li class="todo-item {% if todo.is_completed %}completed{% endif %}">
+            <form action="{% url 'todo_toggle_complete' todo.pk %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">
+                    {% if todo.is_completed %}✔{% else %}⬜{% endif %}
+                </button>
+            </form>
+
+            <span>
+                {{ todo.title }}
+            </span>
+
+            {% if todo.due_date %}
+                <small>
+                    (Due: {{ todo.due_date }})
+                    {% if todo.is_overdue %}
+                        <span class="danger">⚠ Overdue</span>
+                    {% endif %}
+                </small>
+            {% endif %}
+
+            <a href="{% url 'todo_update' todo.pk %}" class="btn">✏ Edit</a>
+            <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-delete">🗑 Delete</a>
+        </li>
+    {% empty %}
+        <p>No TODOs yet.</p>
+    {% endfor %}
+</ul>
+
+{% endblock %}
