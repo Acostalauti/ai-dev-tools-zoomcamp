@@ -19,11 +19,54 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ code, language, onChange, onMou
                 onChange={onChange}
                 onMount={onMount}
                 options={{
+                    // Basic settings
                     minimap: { enabled: false },
                     fontSize: 14,
+                    fontFamily: "'Fira Code', 'Cascadia Code', Consolas, 'Courier New', monospace",
+                    fontLigatures: true,
                     wordWrap: 'on',
                     automaticLayout: true,
                     scrollBeyondLastLine: false,
+
+                    // IntelliSense and autocomplete
+                    suggestOnTriggerCharacters: true,
+                    quickSuggestions: {
+                        other: true,
+                        comments: false,
+                        strings: true,
+                    },
+                    parameterHints: { enabled: true },
+                    acceptSuggestionOnEnter: 'on',
+                    tabCompletion: 'on',
+
+                    // Bracket handling
+                    autoClosingBrackets: 'always',
+                    autoClosingQuotes: 'always',
+                    matchBrackets: 'always',
+                    bracketPairColorization: { enabled: true },
+
+                    // Code formatting
+                    formatOnPaste: true,
+                    formatOnType: true,
+
+                    // Code folding
+                    folding: true,
+                    foldingStrategy: 'indentation',
+                    showFoldingControls: 'always',
+
+                    // Better readability
+                    lineHeight: 22,
+                    renderLineHighlight: 'all',
+                    renderWhitespace: 'selection',
+                    cursorBlinking: 'smooth',
+                    cursorSmoothCaretAnimation: 'on',
+                    smoothScrolling: true,
+
+                    // Additional helpful features
+                    contextmenu: true,
+                    mouseWheelZoom: true,
+                    links: true,
+                    colorDecorators: true,
                 }}
             />
         </div>
