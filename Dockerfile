@@ -65,7 +65,7 @@ COPY start.sh /app/start.sh
 
 # Create necessary directories and set permissions
 RUN mkdir -p /var/log/nginx /var/log/supervisord /run/nginx && \
-    chown -R node:node /app /var/log/nginx /var/log/supervisord /run/nginx && \
+    chown -R node:node /app /var/log/nginx /var/log/supervisord /run/nginx /etc/nginx && \
     chmod -R 755 /app && \
     chmod +x /app/start.sh
 
