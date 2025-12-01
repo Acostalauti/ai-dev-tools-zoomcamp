@@ -40,8 +40,8 @@ RUN npm ci --production
 # Stage 3: Production Image
 FROM node:20-alpine
 
-# Install nginx and supervisor
-RUN apk add --no-cache nginx supervisor
+# Install nginx, supervisor, and gettext (for envsubst)
+RUN apk add --no-cache nginx supervisor gettext
 
 # Create app directory
 WORKDIR /app
@@ -54,16 +54,20 @@ COPY --from=backend-builder /app/server/package.json ./server/package.json
 # Copy frontend build
 COPY --from=frontend-builder /app/client/dist ./client/dist
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy nginx configuration as template
+COPY nginx.conf /etc/nginx/nginx.conf.template
 
 # Copy supervisor configuration
 COPY supervisord.conf /etc/supervisord.conf
 
+# Copy start script
+COPY start.sh /app/start.sh
+
 # Create necessary directories and set permissions
 RUN mkdir -p /var/log/nginx /var/log/supervisord /run/nginx && \
     chown -R node:node /app /var/log/nginx /var/log/supervisord /run/nginx && \
-    chmod -R 755 /app
+    chmod -R 755 /app && \
+    chmod +x /app/start.sh
 
 # Expose port 80
 EXPOSE 80
@@ -75,5 +79,5 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
 # Run as non-root user
 USER node
 
-# Start supervisor (manages nginx + node)
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Start via start script
+CMD ["/app/start.sh"]
